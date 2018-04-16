@@ -379,6 +379,47 @@ class Configuration extends DBALConfiguration
             $this->addCustomDatetimeFunction($name, $className);
         }
     }
+    
+    /**
+     * Registers a custom DQL function that produces a date/time value.
+     * Such a function can then be used in any DQL statement in any place where date/time
+     * functions are allowed.
+     *
+     * DQL function names are case-insensitive.
+     *
+     * @param string|callable $classNameOrFactory Class name or a callable that returns the function.
+     */
+    public function addCustomBooleanFunction(string $functionName, $classNameOrFactory)
+    {
+        $this->customBooleanFunctions[strtolower($functionName)] = $classNameOrFactory;
+    }
+
+    /**
+     * Gets the implementation class name of a registered custom date/time DQL function.
+     *
+     * @return string|callable|null
+     */
+    public function getCustomBooleanFunction(string $functionName)
+    {
+        return $this->customBooleanFunctions[strtolower($functionName)] ?? null;
+    }
+
+    /**
+     * Sets a map of custom DQL date/time functions.
+     *
+     * Keys must be function names and values the FQCN of the implementing class.
+     * The function names will be case-insensitive in DQL.
+     *
+     * Any previously added date/time functions are discarded.
+     *
+     * @param iterable|string[] $functions The map of custom DQL date/time functions.
+     */
+    public function setCustomBooleanFunctions(array $functions) : void
+    {
+        foreach ($functions as $name => $className) {
+            $this->addCustomBooleanFunction($name, $className);
+        }
+    }
 
     /**
      * Sets the custom hydrator modes in one pass.
